@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacob — Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0c;
+      --surface: #141414;
+      --text: #e8e3dc;
+      --muted: #666;
+      --border: #222;
+      --accent: #c9b99a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      background: linear-gradient(to bottom, rgba(12,12,12,0.95) 60%, transparent);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-size: 22px;
+      letter-spacing: 0.18em;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── HERO ─── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 40px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('9C688045-EB2E-47BC-9694-0680E3847772.JPG');
+      background-size: cover;
+      background-position: center 40%;
+      filter: brightness(0.35);
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+
+    .hero-bg.loaded { transform: scale(1); }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(42px, 7vw, 90px);
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeInUp 1.2s 1.5s both;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 48px;
+      background: var(--muted);
+      animation: lineGrow 1.2s 2s both;
+    }
+
+    @keyframes lineGrow {
+      from { height: 0; opacity: 0; }
+      to   { height: 48px; opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      padding: 80px 40px 40px;
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-count {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── MASONRY GRID ─── */
+    .grid {
+      padding: 0 32px 80px;
+      columns: 3;
+      column-gap: 10px;
+    }
+
+    .grid-item {
+      display: block;
+      break-inside: avoid;
+      margin-bottom: 10px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  filter 0.6s ease;
+      filter: brightness(0.92);
+    }
+
+    .grid-item:hover img {
+      transform: scale(1.03);
+      filter: brightness(1);
+    }
+
+    .grid-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      transition: background 0.4s ease;
+      pointer-events: none;
+    }
+
+    .grid-item:hover .grid-item-overlay {
+      background: rgba(0,0,0,0.08);
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      border-top: 1px solid var(--border);
+      padding: 80px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .about-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .about-name {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .about-name em {
+      font-style: italic;
+    }
+
+    .about-bio {
+      padding-top: 8px;
+    }
+
+    .about-bio p {
+      color: #999;
+      line-height: 1.85;
+      font-size: 13px;
+      margin-bottom: 20px;
+      max-width: 500px;
+    }
+
+    .about-bio p:last-child { margin-bottom: 0; }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+    }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      border-top: 1px solid var(--border);
+      padding: 60px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contact-cta {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-size: clamp(28px, 4vw, 48px);
+      color: var(--text);
+    }
+
+    .contact-cta em { font-style: italic; }
+
+    .contact-link {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--muted);
+      padding-bottom: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .contact-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garant', serif;
+      font-weight: 300;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── LIGHTBOX ─── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(8, 8, 8, 0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    #lightbox.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #lightbox img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      transform: scale(0.94);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #lightbox.active img { transform: scale(1); }
+
+    .lb-close {
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lb-close:hover { color: var(--text); }
+
+    .lb-close svg { width: 20px; height: 20px; }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.2s;
+      padding: 16px 20px;
+    }
+
+    .lb-nav:hover { color: var(--text); }
+    .lb-nav.prev { left: 20px; }
+    .lb-nav.next { right: 20px; }
+    .lb-nav svg { width: 28px; height: 28px; }
+
+    .lb-counter {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .hero { padding: 0 24px 56px; }
+      .section-header { padding: 60px 24px 32px; }
+      .grid { padding: 0 20px 60px; columns: 2; column-gap: 8px; }
+      .grid-item { margin-bottom: 8px; }
+      #about { padding: 60px 24px; grid-template-columns: 1fr; gap: 32px; }
+      #contact { padding: 48px 24px; flex-direction: column; gap: 28px; align-items: flex-start; }
+      footer { padding: 20px 24px; }
+    }
+
+    @media (max-width: 520px) {
+      .grid { columns: 1; padding: 0 14px 48px; }
+      .nav-links { gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Jacob</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <h1 class="hero-tagline">Moments<br><em>in light</em></h1>
+      <p class="hero-sub">Photography &mdash; Taiwan &bull; Japan &bull; Beyond</p>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </section>
+
+  <!-- WORK -->
+  <div class="section-header" id="work">
+    <span class="section-title">Selected Work</span>
+    <div class="section-rule"></div>
+    <span class="section-count">18 images</span>
+  </div>
+
+  <div class="grid" id="photoGrid">
+    <div class="grid-item" data-index="0">
+      <img src="232FFF4E-80E9-475C-8213-4232BD7402F4.JPG" alt="Fashion portrait, graffiti wall" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="1">
+      <img src="9C688045-EB2E-47BC-9694-0680E3847772.JPG" alt="Night scooter, neon city" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="2">
+      <img src="3C5863AC-5F5E-4B56-96A4-0B528BEF9FD4.JPG" alt="Yakitori restaurant workers, Japan" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="3">
+      <img src="IMG_1430_VSCO.JPG" alt="Night portrait" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="4">
+      <img src="D2FAC422-5223-4DF8-B8DF-DD8C8A0BFB4D.JPG" alt="Taipei street signage" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="5">
+      <img src="4B4EC596-6D78-4365-B01C-926323614FEF.JPG" alt="Japanese restaurant, night" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="6">
+      <img src="8DDDE18B-CC53-4FDA-B659-45889B56A6CA.JPG" alt="Fashion portrait, graffiti wall II" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="7">
+      <img src="48670513-5E21-463E-868F-3DBAA3F091F1.JPG" alt="Street portrait, Taipei" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="8">
+      <img src="622166E7-79D2-432A-B810-F614BF4087A2.JPG" alt="Digital art installation" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="9">
+      <img src="E5D2245D-CB5C-4980-8300-9D32140D47A7.JPG" alt="Wolf mask, bamboo forest" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="10">
+      <img src="D5745C68-6371-4B7B-810B-AB568BCC5036.JPG" alt="Cherry blossoms, Kyoto" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="11">
+      <img src="F868271F-3B4A-4198-B582-AB1D9A427114.JPG" alt="Kamo River, Kyoto" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="12">
+      <img src="IMG_7706.JPG" alt="Rain in Kyoto" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="13">
+      <img src="C44BF900-06D6-4147-9314-EA174324F88F.JPG" alt="Lion dance" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="14">
+      <img src="880C19CD-D392-42AE-BBDA-66CF634A1141.JPG" alt="Flowering tree" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="15">
+      <img src="BA618027-F3DE-4983-8B9C-AFFFE342938B.JPG" alt="Red rock, Arches National Park" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="16">
+      <img src="IMG_3946_VSCO.JPG" alt="Festival food stall" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+    <div class="grid-item" data-index="17">
+      <img src="D6B80793-3AC3-48C3-AFBC-3B9B498C4006.JPG" alt="Autumn afternoon" loading="lazy" />
+      <div class="grid-item-overlay"></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div>
+      <p class="about-label">About</p>
+      <h2 class="about-name">Jacob<br><em>Lai</em></h2>
+    </div>
+    <div class="about-bio">
+      <p>A photographer drawn to the poetry of ordinary life — the blue hour of a Taipei street, a stranger's expression, the stillness between moments.</p>
+      <p>Working across documentary, portrait, and street photography, the work explores cultural texture and human connection across East Asia and beyond.</p>
+      <div class="about-tags">
+        <span class="tag">Street</span>
+        <span class="tag">Portrait</span>
+        <span class="tag">Documentary</span>
+        <span class="tag">Taiwan</span>
+        <span class="tag">Japan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="contact-cta">Let's make<br><em>something together.</em></p>
+    <a href="mailto:hello@jacoblai.com" class="contact-link">Get in touch</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Jacob</span>
+    <span class="footer-copy">&copy; 2026 &mdash; All rights reserved</span>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <button class="lb-nav prev" id="lbPrev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lb-nav next" id="lbNext" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+    <span class="lb-counter" id="lbCounter"></span>
+  </div>
+
+  <script>
+    // Hero parallax
+    const heroBg = document.getElementById('heroBg');
+    window.addEventListener('load', () => heroBg.classList.add('loaded'));
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroBg.style.transform = `scale(1) translateY(${y * 0.25}px)`;
+      }
+    }, { passive: true });
+
+    // Lightbox
+    const items = Array.from(document.querySelectorAll('.grid-item'));
+    const lb    = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCtr = document.getElementById('lbCounter');
+    let current = 0;
+
+    function openLightbox(index) {
+      current = index;
+      const src = items[index].querySelector('img').src;
+      lbImg.src = src;
+      lbCtr.textContent = `${index + 1} / ${items.length}`;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function navigate(dir) {
+      current = (current + dir + items.length) % items.length;
+      lbImg.style.opacity = '0';
+      setTimeout(() => {
+        lbImg.src = items[current].querySelector('img').src;
+        lbCtr.textContent = `${current + 1} / ${items.length}`;
+        lbImg.style.opacity = '1';
+      }, 140);
+    }
+
+    lbImg.style.transition = 'opacity 0.14s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)';
+
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => openLightbox(i));
+    });
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => navigate(-1));
+    document.getElementById('lbNext').addEventListener('click', () => navigate(1));
+
+    lb.addEventListener('click', e => {
+      if (e.target === lb) closeLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+
+    // Touch swipe
+    let touchX = null;
+    lb.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+      touchX = null;
+    });
+
+    // Fade-in grid items on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    items.forEach((item, i) => {
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(20px)';
+      item.style.transition = `opacity 0.6s ease ${(i % 6) * 60}ms, transform 0.6s ease ${(i % 6) * 60}ms`;
+      observer.observe(item);
+    });
+  </script>
+</body>
+</html>

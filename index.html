@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jacob Reyes — Photography</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:#0a0a0a;
+      --panel:#111111;
+      --border: rgba(255,255,255,0.08);
+      --fg:#efece6;
+      --fg-2: rgba(239,236,230,0.55);
+      --fg-3: rgba(239,236,230,0.35);
+      --accent:#E89B6B;
+      --cols: 4;
+      --gap: 14px;
+      --radius: 2px;
+      --sidebar-w: 240px;
+      --rail-w: 44px;
+
+      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+      --font-ui: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------------- Layout shell ---------------- */
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr var(--rail-w);
+      min-height: 100vh;
+    }
+
+    /* ---------------- Sidebar ---------------- */
+    .sidebar {
+      position: sticky; top: 0;
+      height: 100vh;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      border-right: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .brand { display: flex; flex-direction: column; gap: 10px; }
+    .monogram {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      border: 1px solid var(--fg);
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      color: var(--fg);
+    }
+    .brand-name {
+      margin-top: 14px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.0;
+      letter-spacing: -0.005em;
+      color: var(--fg);
+    }
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--fg-3);
+    }
+    .vnav { margin-top: auto; display: flex; flex-direction: column; gap: 14px; }
+    .vnav a {
+      font-size: 13.5px;
+      letter-spacing: 0.02em;
+      color: var(--fg-2);
+      width: max-content;
+      position: relative;
+      padding: 2px 0;
+      transition: color .25s ease;
+    }
+    .vnav a:hover { color: var(--fg); }
+    .vnav a.active { color: var(--fg); }
+    .vnav a.active::after {
+      content: ""; position: absolute; left: 0; right: -22px; bottom: 8px;
+      height: 1px; background: var(--accent);
+      transform-origin: left;
+    }
+    .socials {
+      margin-top: 16px;
+      display: flex; gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--fg-3);
+    }
+    .socials a { transition: color .2s; }
+    .socials a:hover { color: var(--fg); }
+
+    /* ---------------- Main ---------------- */
+    .main { padding: 28px 32px 48px; min-width: 0; }
+
+    /* ---------------- Topbar ---------------- */
+    .topbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .count { display: flex; align-items: baseline; gap: 10px; }
+    .count-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--fg);
+    }
+    .count-lbl {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--fg-3);
+      text-transform: uppercase;
+    }
+    .filters {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .fbtn {
+      font-size: 12.5px;
+      letter-spacing: 0.02em;
+      color: var(--fg-2);
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: color .2s, background .2s;
+      position: relative;
+    }
+    .fbtn:hover { color: var(--fg); }
+    .fbtn.on {
+      color: var(--bg);
+      background: var(--fg);
+    }
+    .theme-dark .fbtn.on { color: #0a0a0a; }
+    .theme-light .fbtn.on { color: #ffffff; }
+
+    /* ---------------- Grid (CSS columns masonry) ---------------- */
+    .grid {
+      column-count: var(--cols);
+      column-gap: var(--gap);
+    }
+    .card {
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin: 0 0 var(--gap);
+      break-inside: avoid;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--panel);
+      cursor: zoom-in;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: cardIn .55s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    @keyframes cardIn { to { opacity: 1; transform: none; } }
+
+    .ph-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .35s ease;
+      background: var(--panel);
+      -webkit-user-drag: none;
+    }
+    .card:hover .ph-img { transform: scale(1.04); }
+    .card .card-overlay {
+      position: absolute; inset: 0;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.55) 100%);
+      opacity: 0;
+      transition: opacity .35s ease;
+      pointer-events: none;
+    }
+    .theme-light .card .card-overlay {
+      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.45) 100%);
+    }
+    .card:hover .card-overlay { opacity: 1; }
+    .caps-always .card .card-overlay { opacity: 1; }
+    .caps-none   .card .card-overlay { opacity: 0 !important; }
+
+    .card-meta { display: flex; flex-direction: column; gap: 2px; color: #fff; }
+    .card-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+    }
+    .card-sub {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.2;
+      color: rgba(255,255,255,0.85);
+    }
+    .card-cat {
+      position: absolute;
+      top: 12px; left: 14px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ---------------- Action rail (right) ---------------- */
+    .rail {
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      margin-top: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--panel);
+      width: 32px;
+      justify-self: center;
+    }
+    .rail button {
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      color: var(--fg-2);
+      transition: color .2s, background .2s;
+    }
+    .rail button:hover { color: var(--fg); background: rgba(255,255,255,0.05); }
+    .theme-light .rail button:hover { background: rgba(0,0,0,0.05); }
+
+    /* ---------------- Footer ---------------- */
+    .foot {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.16em;
+      color: var(--fg-3);
+      text-transform: uppercase;
+    }
+    .foot .dot { opacity: 0.6; }
+
+    /* ---------------- Lightbox ---------------- */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,0.86);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      animation: lbIn .25s ease forwards;
+    }
+    .theme-light .lightbox { background: rgba(20,16,12,0.78); }
+    @keyframes lbIn { from { opacity: 0; } to { opacity: 1; } }
+    .lb-close {
+      position: absolute; top: 22px; right: 22px;
+      width: 38px; height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      display: grid; place-items: center;
+      transition: background .2s;
+    }
+    .lb-close:hover { background: rgba(255,255,255,0.08); }
+    .lb-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 38px; height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      display: grid; place-items: center;
+      transition: background .2s;
+    }
+    .lb-nav.left  { left: 22px; }
+    .lb-nav.right { right: 22px; }
+    .lb-nav:hover { background: rgba(255,255,255,0.08); }
+    .lb-figure {
+      max-width: min(78vw, 1100px);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 0;
+    }
+    .lb-image {
+      max-height: 76vh;
+      max-width: 78vw;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: #000;
+    }
+    .lb-image .ph-img { width: 100%; height: 100%; object-fit: contain; }
+    .lb-cap { display: flex; flex-direction: column; gap: 4px; color: #fff; }
+    .lb-cap-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+    }
+    .lb-cap-meta {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      color: rgba(255,255,255,0.78);
+      display: flex; gap: 8px; align-items: baseline;
+    }
+    .lb-cap-meta .dot { opacity: 0.5; }
+
+    /* ---------------- Responsive ---------------- */
+    @media (max-width: 1100px) {
+      :root { --cols: 3; --sidebar-w: 200px; }
+    }
+    @media (max-width: 820px) {
+      :root { --cols: 2; --sidebar-w: 100%; --rail-w: 0px; }
+      .shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+      }
+      .brand { flex: 1 1 auto; flex-direction: row; align-items: center; gap: 12px; }
+      .brand-name { font-size: 22px; margin-top: 0; }
+      .brand-tag { display: none; }
+      .vnav { margin-top: 0; flex-direction: row; gap: 16px; flex-wrap: wrap; }
+      .vnav a.active::after { display: none; }
+      .socials { margin-top: 0; }
+      .rail { display: none; }
+      .main { padding: 18px 18px 32px; }
+      .count-num { font-size: 26px; }
+    }
+    @media (max-width: 520px) {
+      :root { --cols: 1; }
+      .vnav, .socials { display: none; }
+      .filters { gap: 0; }
+      .fbtn { padding: 6px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+/* ─── tweaks-panel.jsx ─────────────────────────────────────────────────────── */
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+  .twk-chips{display:flex;gap:6px}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
+    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
+    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
+    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),0 2px 6px rgba(0,0,0,.15)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
+    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i:first-child{box-shadow:none}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-omelette-chrome=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">
+          {children}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+  if (!fitsAsSegments) {
+    const resolve = (s) => {
+      const m = options.find((o) => String(typeof o === 'object' ? o.value : o) === s);
+      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    };
+    return <TweakSelect label={label} value={value} options={options}
+                        onChange={(s) => onChange(resolve(s))} />;
+  }
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakColor({ label, value, options, onChange }) {
+  const __twkIsLight = (hex) => {
+    const h = String(hex).replace('#', '');
+    const x = h.length === 3 ? h.replace(/./g, (c) => c + c) : h.padEnd(6, '0');
+    const n = parseInt(x.slice(0, 6), 16);
+    if (Number.isNaN(n)) return true;
+    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    return r * 299 + g * 587 + b * 114 > 148000;
+  };
+  const TwkCheck = ({ light }) => (
+    <svg viewBox="0 0 14 14" aria-hidden="true">
+      <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
+            strokeLinecap="round" strokeLinejoin="round"
+            stroke={light ? 'rgba(0,0,0,.78)' : '#fff'} />
+    </svg>
+  );
+
+  if (!options || !options.length) {
+    return (
+      <div className="twk-row twk-row-h">
+        <div className="twk-lbl"><span>{label}</span></div>
+        <input type="color" className="twk-swatch" value={value}
+               onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+  const key = (o) => String(JSON.stringify(o)).toLowerCase();
+  const cur = key(value);
+  return (
+    <TweakRow label={label}>
+      <div className="twk-chips" role="radiogroup">
+        {options.map((o, i) => {
+          const colors = Array.isArray(o) ? o : [o];
+          const [hero, ...rest] = colors;
+          const sup = rest.slice(0, 4);
+          const on = key(o) === cur;
+          return (
+            <button key={i} type="button" className="twk-chip" role="radio"
+                    aria-checked={on} data-on={on ? '1' : '0'}
+                    aria-label={colors.join(', ')} title={colors.join(' · ')}
+                    style={{ background: hero }}
+                    onClick={() => onChange(o)}>
+              {sup.length > 0 && (
+                <span>
+                  {sup.map((c, j) => <i key={j} style={{ background: c }} />)}
+                </span>
+              )}
+              {on && <TwkCheck light={__twkIsLight(hero)} />}
+            </button>
+          );
+        })}
+      </div>
+    </TweakRow>
+  );
+}
+
+/* ─── portfolio.jsx ────────────────────────────────────────────────────────── */
+
+const { useState, useEffect, useMemo, useRef, useLayoutEffect } = React;
+
+const PHOTOS = [
+  { id: 1,  cat: "street",    ar: "6240/4160", src: "3C5863AC-5F5E-4B56-96A4-0B528BEF9FD4.JPG", label: "UNAGI — 01",          meta: "Kawatoyo • Narita" },
+  { id: 2,  cat: "street",    ar: "5302/4160", src: "4B4EC596-6D78-4365-B01C-926323614FEF.JPG", label: "TEAHOUSE — 02",       meta: "Late seating, Kyoto" },
+  { id: 3,  cat: "portrait",  ar: "4160/6240", src: "8DDDE18B-CC53-4FDA-B659-45889B56A6CA.JPG", label: "ALLEY — 03",          meta: "Seoul backstreet" },
+  { id: 4,  cat: "street",    ar: "3291/4160", src: "9C688045-EB2E-47BC-9694-0680E3847772.JPG", label: "VESPA — 04",          meta: "Taipei at speed" },
+  { id: 5,  cat: "portrait",  ar: "4070/5940", src: "232FFF4E-80E9-475C-8213-4232BD7402F4.JPG", label: "BANDANA — 05",        meta: "Hongdae, Seoul" },
+  { id: 6,  cat: "landscape", ar: "4000/6000", src: "880C19CD-D392-42AE-BBDA-66CF634A1141.JPG", label: "BOUGAINVILLEA — 06",  meta: "Looking up • LA" },
+  { id: 7,  cat: "editorial", ar: "4160/5223", src: "622166E7-79D2-432A-B810-F614BF4087A2.JPG", label: "TEAMLAB — 07",        meta: "Flower room" },
+  { id: 8,  cat: "portrait",  ar: "5819/4160", src: "48670513-5E21-463E-868F-3DBAA3F091F1.JPG", label: "TINTED — 08",         meta: "Wanhua, Taipei" },
+  { id: 9,  cat: "landscape", ar: "4160/6240", src: "BA618027-F3DE-4983-8B9C-AFFFE342938B.JPG", label: "ARCHES — 09",         meta: "Moab, Utah" },
+  { id: 10, cat: "editorial", ar: "4801/4160", src: "C44BF900-06D6-4147-9314-EA174324F88F.JPG", label: "LION DANCE — 10",     meta: "Lunar New Year" },
+  { id: 11, cat: "street",    ar: "3931/5219", src: "D2FAC422-5223-4DF8-B8DF-DD8C8A0BFB4D.JPG", label: "SIGNAGE — 11",        meta: "Taipei Main" },
+  { id: 12, cat: "portrait",  ar: "4160/6090", src: "D6B80793-3AC3-48C3-AFBC-3B9B498C4006.JPG", label: "PIGGYBACK — 12",      meta: "Autumn, October" },
+  { id: 13, cat: "portrait",  ar: "4094/6240", src: "D5745C68-6371-4B7B-810B-AB568BCC5036.JPG", label: "SAKURA — 13",         meta: "Weeping cherry, Kyoto" },
+  { id: 14, cat: "editorial", ar: "4000/6000", src: "E5D2245D-CB5C-4980-8300-9D32140D47A7.JPG", label: "KITSUNE — 14",        meta: "Bamboo grove" },
+  { id: 15, cat: "landscape", ar: "6240/4160", src: "F868271F-3B4A-4198-B582-AB1D9A427114.JPG", label: "KAMOGAWA — 15",       meta: "Pontochō from above" },
+  { id: 16, cat: "portrait",  ar: "3956/5463", src: "IMG_1430_VSCO.JPG",                        label: "AFTER HOURS — 16",    meta: "Ximending, Taipei" },
+  { id: 17, cat: "portrait",  ar: "5935/4000", src: "IMG_3946_VSCO.JPG",                        label: "FRANKFURT GIRL — 17", meta: "Night market stall" },
+  { id: 18, cat: "street",    ar: "6240/4160", src: "IMG_7706.JPG",                             label: "OMOTESANDŌ — 18",     meta: "Rain over Narita" },
+];
+
+const CATEGORIES = [
+  { id: "all",       label: "All" },
+  { id: "portrait",  label: "Portrait" },
+  { id: "street",    label: "Street" },
+  { id: "landscape", label: "Landscape" },
+  { id: "editorial", label: "Editorial" },
+];
+
+const NAV_ITEMS = ["Work", "Series", "About", "Journal", "Contact"];
+
+function Photo({ photo, eager }) {
+  return (
+    <img
+      className="ph-img"
+      src={photo.src}
+      alt={photo.label}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      draggable={false}
+    />
+  );
+}
+
+function Sidebar({ name, monogram }) {
+  return (
+    <aside className="sidebar">
+      <div className="brand">
+        <div className="monogram" aria-label={name}>{monogram}</div>
+        <div className="brand-name">{name}</div>
+        <div className="brand-tag">PHOTOGRAPHY · EST. 2018</div>
+      </div>
+      <nav className="vnav">
+        {NAV_ITEMS.map((n, i) => (
+          <a key={n} href="#" className={i === 0 ? "active" : ""}>{n}</a>
+        ))}
+      </nav>
+      <div className="socials">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="Behance">BE</a>
+        <a href="#" aria-label="Vimeo">VM</a>
+        <a href="#" aria-label="Email">@</a>
+      </div>
+    </aside>
+  );
+}
+
+function TopBar({ active, onPick, count }) {
+  return (
+    <div className="topbar">
+      <div className="count">
+        <span className="count-num">{String(count).padStart(2, "0")}</span>
+        <span className="count-lbl">selected works</span>
+      </div>
+      <div className="filters" role="tablist">
+        {CATEGORIES.map((c) => (
+          <button
+            key={c.id}
+            role="tab"
+            aria-selected={active === c.id}
+            className={`fbtn ${active === c.id ? "on" : ""}`}
+            onClick={() => onPick(c.id)}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const InfoIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>
+  </svg>
+);
+const HeartIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
+  </svg>
+);
+const BookmarkIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M6 4h12v17l-6-4-6 4z"/>
+  </svg>
+);
+const ShareIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/>
+    <path d="M8 11l8-4M8 13l8 4"/>
+  </svg>
+);
+const CloseIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M5 5l14 14M19 5L5 19"/>
+  </svg>
+);
+const ArrowIcon = ({ dir = "right" }) => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6"
+       style={{ transform: dir === "left" ? "scaleX(-1)" : "none" }}>
+    <path d="M5 12h14M13 6l6 6-6 6"/>
+  </svg>
+);
+
+function ActionRail({ onInfo }) {
+  return (
+    <div className="rail" aria-hidden="false">
+      <button title="Info" onClick={onInfo}><InfoIcon /></button>
+      <button title="Like"><HeartIcon /></button>
+      <button title="Save"><BookmarkIcon /></button>
+      <button title="Share"><ShareIcon /></button>
+    </div>
+  );
+}
+
+function Grid({ photos, onOpen, hovered, setHovered }) {
+  return (
+    <div className="grid">
+      {photos.map((p, i) => (
+        <button
+          key={p.id}
+          className={`card ${hovered === p.id ? "hov" : ""}`}
+          style={{
+            aspectRatio: p.ar,
+            animationDelay: `${i * 28}ms`,
+          }}
+          onMouseEnter={() => setHovered(p.id)}
+          onMouseLeave={() => setHovered((h) => (h === p.id ? null : h))}
+          onClick={() => onOpen(p.id)}
+        >
+          <Photo photo={p} eager={i < 6} />
+          <div className="card-overlay">
+            <div className="card-meta">
+              <div className="card-title">{p.label}</div>
+              <div className="card-sub">{p.meta}</div>
+            </div>
+            <div className="card-cat">{p.cat}</div>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Lightbox({ photo, onClose, onPrev, onNext }) {
+  useEffect(() => {
+    if (!photo) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onPrev();
+      else if (e.key === "ArrowRight") onNext();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [photo, onClose, onPrev, onNext]);
+
+  if (!photo) return null;
+  return (
+    <div className="lightbox" onClick={onClose}>
+      <button className="lb-close" onClick={onClose} aria-label="Close"><CloseIcon /></button>
+      <button className="lb-nav left"  onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous"><ArrowIcon dir="left" /></button>
+      <button className="lb-nav right" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next"><ArrowIcon /></button>
+      <figure className="lb-figure" onClick={(e) => e.stopPropagation()}>
+        <div className="lb-image" style={{ aspectRatio: photo.ar }}>
+          <Photo photo={photo} eager />
+        </div>
+        <figcaption className="lb-cap">
+          <div className="lb-cap-title">{photo.label}</div>
+          <div className="lb-cap-meta">
+            <span>{photo.cat.toUpperCase()}</span>
+            <span className="dot">·</span>
+            <span>{photo.meta}</span>
+            <span className="dot">·</span>
+            <span>2025</span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
+const TWEAK_DEFAULTS = {
+  "name": "Jacob Bautista",
+  "monogram": "JB",
+  "theme": "light",
+  "accent": "#E89B6B",
+  "columns": 4,
+  "gap": 14,
+  "rounded": 2,
+  "captionStyle": "minimal",
+  "fontPair": "editorial"
+};
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [active, setActive] = useState("all");
+  const [openId, setOpenId] = useState(null);
+  const [hovered, setHovered] = useState(null);
+
+  const visible = useMemo(
+    () => (active === "all" ? PHOTOS : PHOTOS.filter((p) => p.cat === active)),
+    [active]
+  );
+
+  const openIdx = visible.findIndex((p) => p.id === openId);
+  const openPhoto = openIdx >= 0 ? visible[openIdx] : null;
+  const prev = () => openIdx >= 0 && setOpenId(visible[(openIdx - 1 + visible.length) % visible.length].id);
+  const next = () => openIdx >= 0 && setOpenId(visible[(openIdx + 1) % visible.length].id);
+
+  const dark = t.theme === "dark";
+
+  useLayoutEffect(() => {
+    const r = document.documentElement;
+    r.style.setProperty("--accent", t.accent);
+    if (t.columns !== TWEAK_DEFAULTS.columns) {
+      r.style.setProperty("--cols", String(t.columns));
+    } else {
+      r.style.removeProperty("--cols");
+    }
+    r.style.setProperty("--gap", `${t.gap}px`);
+    r.style.setProperty("--radius", `${t.rounded}px`);
+
+    if (dark) {
+      r.style.setProperty("--bg",     "#0a0a0a");
+      r.style.setProperty("--panel",  "#111111");
+      r.style.setProperty("--border", "rgba(255,255,255,0.08)");
+      r.style.setProperty("--fg",     "#efece6");
+      r.style.setProperty("--fg-2",   "rgba(239,236,230,0.55)");
+      r.style.setProperty("--fg-3",   "rgba(239,236,230,0.35)");
+    } else {
+      r.style.setProperty("--bg",     "#f6f4ef");
+      r.style.setProperty("--panel",  "#ffffff");
+      r.style.setProperty("--border", "rgba(20,16,12,0.10)");
+      r.style.setProperty("--fg",     "#181613");
+      r.style.setProperty("--fg-2",   "rgba(24,22,19,0.62)");
+      r.style.setProperty("--fg-3",   "rgba(24,22,19,0.40)");
+    }
+
+    if (t.fontPair === "editorial") {
+      r.style.setProperty("--font-display", "'Cormorant Garamond', 'Times New Roman', serif");
+      r.style.setProperty("--font-ui",      "'Helvetica Neue', Helvetica, Arial, sans-serif");
+    } else if (t.fontPair === "modernist") {
+      r.style.setProperty("--font-display", "'Helvetica Neue', Helvetica, Arial, sans-serif");
+      r.style.setProperty("--font-ui",      "'Helvetica Neue', Helvetica, Arial, sans-serif");
+    } else if (t.fontPair === "mono") {
+      r.style.setProperty("--font-display", "'JetBrains Mono', ui-monospace, Menlo, monospace");
+      r.style.setProperty("--font-ui",      "'Helvetica Neue', Helvetica, Arial, sans-serif");
+    }
+  }, [t.accent, t.columns, t.gap, t.rounded, t.fontPair, dark]);
+
+  return (
+    <div className={`shell theme-${t.theme} caps-${t.captionStyle}`}>
+      <Sidebar name={t.name} monogram={t.monogram} />
+      <main className="main">
+        <TopBar active={active} onPick={setActive} count={visible.length} />
+        <Grid
+          photos={visible}
+          onOpen={setOpenId}
+          hovered={hovered}
+          setHovered={setHovered}
+        />
+        <footer className="foot">
+          <span>© {new Date().getFullYear()} {t.name}</span>
+          <span className="dot">·</span>
+          <span>Available for commissions — Spring 2026</span>
+        </footer>
+      </main>
+      <ActionRail onInfo={() => openId == null && visible[0] && setOpenId(visible[0].id)} />
+
+      <Lightbox
+        photo={openPhoto}
+        onClose={() => setOpenId(null)}
+        onPrev={prev}
+        onNext={next}
+      />
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Identity">
+          <TweakText  label="Name"     value={t.name}      onChange={(v) => setTweak("name", v)} />
+          <TweakText  label="Monogram" value={t.monogram}  onChange={(v) => setTweak("monogram", v)} />
+        </TweakSection>
+        <TweakSection label="Theme">
+          <TweakRadio
+            label="Mode"
+            value={t.theme}
+            options={[{ value: "dark", label: "Dark" }, { value: "light", label: "Light" }]}
+            onChange={(v) => setTweak("theme", v)}
+          />
+          <TweakColor
+            label="Accent"
+            value={t.accent}
+            options={["#E89B6B", "#C6A87A", "#7AA8C6", "#9BB07A", "#C77A8D", "#E8E8E8"]}
+            onChange={(v) => setTweak("accent", v)}
+          />
+          <TweakSelect
+            label="Type"
+            value={t.fontPair}
+            options={[
+              { value: "editorial", label: "Editorial (serif + sans)" },
+              { value: "modernist", label: "Modernist (sans only)" },
+              { value: "mono",      label: "Mono display + sans" },
+            ]}
+            onChange={(v) => setTweak("fontPair", v)}
+          />
+        </TweakSection>
+        <TweakSection label="Grid">
+          <TweakSlider label="Columns" min={2} max={6} step={1} value={t.columns} onChange={(v) => setTweak("columns", v)} />
+          <TweakSlider label="Gap"     min={0} max={32} step={2} value={t.gap}    onChange={(v) => setTweak("gap", v)} />
+          <TweakSlider label="Radius"  min={0} max={16} step={1} value={t.rounded} onChange={(v) => setTweak("rounded", v)} />
+          <TweakRadio
+            label="Captions"
+            value={t.captionStyle}
+            options={[
+              { value: "minimal", label: "On hover" },
+              { value: "always",  label: "Always" },
+              { value: "none",    label: "Off" },
+            ]}
+            onChange={(v) => setTweak("captionStyle", v)}
+          />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
