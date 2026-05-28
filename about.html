@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — Jacob Bautista</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:#f6f4ef;
+      --panel:#ffffff;
+      --border: rgba(20,16,12,0.10);
+      --fg:#181613;
+      --fg-2: rgba(24,22,19,0.62);
+      --fg-3: rgba(24,22,19,0.40);
+      --accent:#E89B6B;
+      --sidebar-w: 240px;
+
+      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+      --font-ui: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar — matches index.html */
+    .sidebar {
+      position: sticky; top: 0;
+      height: 100vh;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      border-right: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .brand { display: flex; flex-direction: column; gap: 10px; }
+    .monogram {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      border: 1px solid var(--fg);
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-style: italic;
+      color: var(--fg);
+    }
+    .brand-name {
+      margin-top: 14px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.0;
+      color: var(--fg);
+    }
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--fg-3);
+    }
+    .vnav { margin-top: auto; display: flex; flex-direction: column; gap: 14px; }
+    .vnav a {
+      font-size: 13.5px;
+      color: var(--fg-2);
+      width: max-content;
+      position: relative;
+      padding: 2px 0;
+      transition: color .25s ease;
+    }
+    .vnav a:hover { color: var(--fg); }
+    .vnav a.active { color: var(--fg); }
+    .vnav a.active::after {
+      content: ""; position: absolute; left: 0; right: -22px; bottom: 8px;
+      height: 1px; background: var(--accent);
+    }
+    .socials {
+      margin-top: 16px;
+      display: flex; gap: 14px;
+      color: var(--fg-3);
+    }
+    .socials a { transition: color .2s; display: inline-flex; }
+    .socials a:hover { color: var(--fg); }
+
+    /* About layout */
+    .main {
+      padding: 64px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 96px;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: transparent;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: rise .7s cubic-bezier(.22,.61,.36,1) forwards;
+      margin: 0;
+    }
+
+    .collage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .collage img {
+      position: absolute;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .collage .c-deer {
+      top: 0;
+      left: 0;
+      width: 58%;
+      height: 49.5%;
+      z-index: 1;
+    }
+    .collage .c-melrose {
+      bottom: 0;
+      left: 0;
+      width: 58%;
+      height: 49.5%;
+      z-index: 1;
+    }
+    .collage .c-temple {
+      top: 22%;
+      right: 0;
+      width: 50%;
+      height: 56%;
+      z-index: 2;
+    }
+
+    .about-text {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 520px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: rise .7s .12s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    .about-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--fg-3);
+      text-transform: uppercase;
+    }
+    .about-name {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 7vw, 96px);
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: var(--fg);
+    }
+    .about-name em {
+      font-style: italic;
+      color: var(--fg-2);
+    }
+    .about-lead {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(22px, 2.2vw, 28px);
+      line-height: 1.35;
+      color: var(--fg);
+      margin: 0;
+    }
+    .about-body {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--fg-2);
+      margin: 0;
+    }
+    .about-rule {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 12px 0 4px;
+    }
+    .about-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px 32px;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .meta-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--fg-3);
+      text-transform: uppercase;
+    }
+    .meta-value {
+      font-size: 14.5px;
+      color: var(--fg);
+    }
+    .meta-value a { transition: color .2s; }
+    .meta-value a:hover { color: var(--accent); }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      :root { --sidebar-w: 200px; }
+      .main { padding: 48px 48px; gap: 64px; }
+    }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+      }
+      .brand { flex: 1 1 auto; flex-direction: row; align-items: center; gap: 12px; }
+      .brand-name { font-size: 22px; margin-top: 0; }
+      .brand-tag { display: none; }
+      .vnav { margin-top: 0; flex-direction: row; gap: 16px; flex-wrap: wrap; }
+      .vnav a.active::after { display: none; }
+      .socials { margin-top: 0; }
+      .main {
+        padding: 32px 24px 48px;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        min-height: 0;
+      }
+      .about-photo { aspect-ratio: 1 / 1; max-width: 100%; }
+    }
+    @media (max-width: 520px) {
+      .main { padding: 24px 18px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <a href="index.html" class="monogram" aria-label="Back to Work">JB</a>
+        <div class="brand-name">Jacob Bautista</div>
+        <div class="brand-tag">PHOTOGRAPHY · EST. 2026</div>
+      </div>
+      <nav class="vnav">
+        <a href="index.html">Work</a>
+        <a href="series.html">Series</a>
+        <a href="about.html" class="active">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="socials">
+        <a href="https://www.instagram.com/mr.churro/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <figure class="about-photo">
+        <div class="collage">
+          <img class="c-deer"    src="about-jacob.jpg" alt="Jacob with a deer, Nara" />
+          <img class="c-temple"  src="temple.jpg"      alt="Temple doorway" />
+          <img class="c-melrose" src="melrose.jpg"     alt="Melrose, Los Angeles" />
+        </div>
+      </figure>
+
+      <section class="about-text">
+        <h1 class="about-name">About Me</h1>
+        <p class="about-lead">
+          I am about chasing the fleeting, overlooked moments that happen in the margins of everyday life.
+        </p>
+        <p class="about-body">
+          I've spent over a decade using the camera as my creative outlet, focusing heavily on travel and street photography that enhances the raw, natural beauty already present in a scene.
+        </p>
+        <p class="about-body">
+          My goal &mdash; to push visual boundaries, tell honest stories, and remain completely open to the limitless, cinematic possibilities of a single frame.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

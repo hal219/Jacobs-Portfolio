@@ -789,7 +789,12 @@ const CATEGORIES = [
   { id: "editorial", label: "Editorial" },
 ];
 
-const NAV_ITEMS = ["Work", "Series", "About", "Journal", "Contact"];
+const NAV_ITEMS = [
+  { label: "Work",    href: "index.html" },
+  { label: "Series",  href: "series.html" },
+  { label: "About",   href: "about.html" },
+  { label: "Contact", href: "contact.html" },
+];
 
 function Photo({ photo, eager }) {
   return (
@@ -808,13 +813,13 @@ function Sidebar({ name, monogram }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="monogram" aria-label={name}>{monogram}</div>
+        <a href="index.html" className="monogram" aria-label="Back to Work">{monogram}</a>
         <div className="brand-name">{name}</div>
-        <div className="brand-tag">PHOTOGRAPHY · EST. 2018</div>
+        <div className="brand-tag">PHOTOGRAPHY · EST. 2026</div>
       </div>
       <nav className="vnav">
         {NAV_ITEMS.map((n, i) => (
-          <a key={n} href="#" className={i === 0 ? "active" : ""}>{n}</a>
+          <a key={n.label} href={n.href} className={i === 0 ? "active" : ""}>{n.label}</a>
         ))}
       </nav>
       <div className="socials">
